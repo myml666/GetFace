@@ -99,9 +99,10 @@ public class GetFaceActicity extends AppCompatActivity {
                 m.setRotate(-90f, bmp.getWidth() / 2, bmp.getHeight() / 2);
                 Bitmap bm = Bitmap.createBitmap(bmp, 0, 0, bmp.getWidth(), bmp.getHeight(), m, true);
                 Bitmap cutBitmap = cutBitmap(adjustRect,bm);
+                Bitmap scaleBitmap = scaleBitmap(cutBitmap);
                 String savePath = mFilePath + System.currentTimeMillis() + "face.png";
                 boolean save = ImageUtils.save(
-                        cutBitmap,
+                        scaleBitmap,
                         savePath,
                         Bitmap.CompressFormat.PNG
                 );
@@ -121,9 +122,11 @@ public class GetFaceActicity extends AppCompatActivity {
         }
     }
 
+    private Bitmap scaleBitmap(Bitmap cutBitmap) {
+        return Bitmap.createScaledBitmap(cutBitmap,(int)(cutBitmap.getWidth()/1.1),(int)(cutBitmap.getHeight()/1.1),true);
+    }
+
     private Bitmap cutBitmap(Rect adjustRect, Bitmap bm) {
-        LogUtils.eTag("裁剪区域",adjustRect.left+"====="+adjustRect.top+"====="+adjustRect.right+"====="+adjustRect.bottom);
-        LogUtils.eTag("图片大小",bm.getWidth()+"====="+bm.getHeight());
         float scalWidthVal = (float)(bm.getWidth())/(float) (faceRectView.getWidth());
         float scalHeightVal = (float)(bm.getHeight())/(float) (faceRectView.getHeight());
         int x = (int) (adjustRect.right*scalWidthVal);
@@ -143,8 +146,8 @@ public class GetFaceActicity extends AppCompatActivity {
         rect.bottom = (int) (scalWidthVal*rect.bottom);
         justRect.left  = faceRectView.getWidth() - rect.top;
         justRect.right =faceRectView.getWidth() -  rect.bottom;
-        justRect.top = faceRectView.getHeight() - rect.left;
-        justRect.bottom = faceRectView.getHeight() - rect.right;
+        justRect.top = faceRectView.getHeight() - rect.left+Math.abs(rect.width()/10);
+        justRect.bottom = faceRectView.getHeight() - rect.right-Math.abs(rect.width()/5);
         return justRect;
     }
     /**
