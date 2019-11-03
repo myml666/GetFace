@@ -53,7 +53,6 @@ public class FaceRectView extends View {
      * 绘制人脸矩形
      */
     private void drawFaceRect(Rect rect, Canvas canvas) {
-//        LogUtils.eTag("矩形",rect.left+"===="+rect.top+"===="+rect.right+"====="+rect.bottom);
         canvas.drawRect(rect, mPaint);
     }
     /**
